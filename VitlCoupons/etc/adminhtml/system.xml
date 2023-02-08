@@ -16,6 +16,17 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
+            <group id="vitlOptionsGroup" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Coupon options</label>
+                <field id="rule" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Rule Id</label>
+                    <comment>The promotion rule which the coupons will be assigned to.</comment>
+                </field>
+                <field id="product" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product SKU</label>
+                    <comment>The product to check in the order.</comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>
