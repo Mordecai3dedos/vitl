@@ -11,11 +11,15 @@ use Psr\Log\LoggerInterface;
 class CreateCouponOnCreateOrder implements ObserverInterface
 {
     public function __construct(
-        private LoggerInterface $logger,
         private Coupon $coupon,
         private Data $helperData
     ) {}
 
+    /**
+     * @param Observer $observer
+     * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
     public function execute(Observer $observer)
     {
         if(!$this->helperData->getModuleStatus()) {
@@ -24,10 +28,15 @@ class CreateCouponOnCreateOrder implements ObserverInterface
 
         $order = $observer->getEvent()->getOrder();
         $skuToCheck = $this->helperData->getConfigOptions('sku');
+        $ruleId = $this->helperData->getConfigOptions('rule');
 
         foreach ($order['items'] as $item) {
             if ($item['sku'] == $skuToCheck) {
-                return $this->coupon->createCoupon($order['increment_id']);
+                for($i = 0; $i < $item['qty_ordered']; $i++) {
+                    $this->coupon->createCoupon($order['increment_id'], $ruleId);
+                }
+                /** Only one product is needed/accepted so we can stop searching **/
+                return;
             }
         }
     }
