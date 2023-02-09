@@ -10,18 +10,29 @@ class Data extends AbstractHelper
 
     const CONFIG_PATH = 'vitlconfiguration/';
 
-    public function getConfigOptions($field, $storeId = null)
+    /**
+     * @param string $field
+     * @param int|null $storeId
+     * @return mixed
+     */
+    public function getConfigOptions(string $field, int $storeId = null)
     {
         return $this->scopeConfig->getValue(
             self::CONFIG_PATH . 'options/' . $field, ScopeInterface::SCOPE_STORE, $storeId
         );
     }
 
-    public function getModuleStatus($storeId = null)
+    /**
+     * @param int|null $storeId
+     * @return mixed
+     */
+    public function getModuleStatus(int $storeId = null)
     {
         return $this->scopeConfig->getValue(
             self::CONFIG_PATH . 'status/status', ScopeInterface::SCOPE_STORE, $storeId
         );
     }
+
+
 
 }
