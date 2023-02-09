@@ -16,13 +16,13 @@ class Coupon
      * Creates coupon codes, the use of 'clone' allows creating multiple codes from observer
      * The name of the coupon code depends on the $orderId param.
      *
-     * @param int $orderId
-     * @param int $ruleId
+     * @param $orderId
+     * @param $ruleId
      *
      * @return void
      * @throws CouldNotSaveException
      */
-    public function createCoupon(int $orderId, int $ruleId) {
+    public function createCoupon($orderId, $ruleId) {
         $coupon = clone $this->coupon;
         $coupon->setCode($orderId . "_" . $this->generateRandomCouponName())
             ->setIsPrimary(0)
