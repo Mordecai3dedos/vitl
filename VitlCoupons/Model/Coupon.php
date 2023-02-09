@@ -1,7 +1,7 @@
 <?php
 namespace DavidMorales\VitlCoupons\Model;
 
-use Psr\Log\LoggerInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\SalesRule\Api\Data\CouponInterface;
 use Magento\SalesRule\Api\CouponRepositoryInterface;
 
@@ -9,17 +9,39 @@ class Coupon
 {
     public function __construct(
         protected CouponRepositoryInterface $couponRepository,
-        protected CouponInterface $coupon,
-        private LoggerInterface $logger
+        protected CouponInterface $coupon
     ) {}
 
-    public function createCoupon($orderId) {
-        $coupon = $this->coupon;
-        $coupon->setCode($orderId . '_VITL')
+    /**
+     * Creates coupon codes, the use of 'clone' allows creating multiple codes from observer
+     * The name of the coupon code depends on the $orderId param.
+     *
+     * @param int $orderId
+     * @param int $ruleId
+     *
+     * @return void
+     * @throws CouldNotSaveException
+     */
+    public function createCoupon(int $orderId, int $ruleId) {
+        $coupon = clone $this->coupon;
+        $coupon->setCode($orderId . "_" . $this->generateRandomCouponName())
             ->setIsPrimary(0)
-            ->setRuleId(1);
+            ->setRuleId($ruleId);
 
-        $coupon = $this->couponRepository->save($coupon);
-        return $coupon->getCouponId();
+        try {
+            $this->couponRepository->save($coupon);
+        } catch (\Exception $exception) {
+            throw new CouldNotSaveException(__($exception->getMessage()));
+        }
+    }
+
+    /**
+     * Generate random string for the coupon name
+     *
+     * @return string
+     */
+    private function generateRandomCouponName() {
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        return substr(str_shuffle($permitted_chars), 0, 5);
     }
 }
