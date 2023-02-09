@@ -6,7 +6,6 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use DavidMorales\VitlCoupons\Model\Coupon;
 use DavidMorales\VitlCoupons\Helper\Data;
-use Psr\Log\LoggerInterface;
 
 class CreateCouponOnCreateOrder implements ObserverInterface
 {
